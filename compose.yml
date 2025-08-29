@@ -1,0 +1,7 @@
+version: "3.4"
+
+services:
+  backend:
+  #  Contenido para el backend, lo rellenaremos luego
+  frontend:
+  #  Contenido para el frontend, lo rellenaremos luego
