@@ -21,18 +21,22 @@ namespace API
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
-
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-   
-            _logger.LogError(exception, "An unhandled exception has occurred: {message}", exception.Message);
+            _logger.LogError(exception, "Unhandled exception: {Message}", exception.Message);
 
-            string result = JsonSerializer.Serialize(new { error = "An unexpected error occurred. Please try again later." });
+            var errorResponse = new
+            {
+                status = context.Response.StatusCode,
+                title = "Internal Server Error",
+                traceId = context.TraceIdentifier
+            };
 
-            return context.Response.WriteAsync(result);
+            return context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
         }
+
     }
 }
