@@ -1,5 +1,5 @@
-﻿using API.Extensions;
-using Common.Dtos;
+﻿using API.Dtos;
+using API.Extensions;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +31,9 @@ public class ContractsController(IContractService contractService) : ControllerB
     }
 
     [HttpPost]
-    public async Task<ActionResult<ContractDto>> CreateContract([FromBody] ContractDto contractDto)
+    public async Task<ActionResult<ContractDto>> CreateContract([FromBody] CreateContractDto createDto)
     {
-        Contract contract = contractDto.ToEntity();
+        Contract contract = createDto.ToEntity();
         bool success = await _contractService.CreateContractAsync(contract);
         if (!success)
         {
@@ -43,13 +43,13 @@ public class ContractsController(IContractService contractService) : ControllerB
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<ActionResult> UpdateContract(Guid id, [FromBody] ContractDto contractDto)
+    public async Task<ActionResult> UpdateContract(Guid id, [FromBody] UpdateContractDto updateDto)
     {
-        if (id != contractDto.Id)
+        if (id != updateDto.Id)
         {
             return BadRequest();
         }
-        Contract contract = contractDto.ToEntity();
+        Contract contract = updateDto.ToEntity();
         bool success = await _contractService.UpdateContractAsync(contract);
         if (!success)
         {
