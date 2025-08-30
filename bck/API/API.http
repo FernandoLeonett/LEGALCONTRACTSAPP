@@ -1,6 +1,46 @@
-@API_HostAddress = http://localhost:5166
+@apiBaseUrl = http://localhost:5166/api/contracts
 
-GET {{API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Crear un nuevo contrato (POST)
+POST {{apiBaseUrl}}
+Content-Type: application/json
 
-###
+{
+    "id": "00000000-0000-0000-0000-000000000001",
+    "authorName": "Jane Doe",
+    "legalEntityName": "Example Corp",
+    "createdDate": "2024-05-20T10:00:00Z",
+    "LegalEntityDescription":"Es un contrato"
+}
+
+### Crear otro contrato (POST)
+POST {{apiBaseUrl}}
+Content-Type: application/json
+
+{
+    "id": "00000000-0000-0000-0000-000000000002",
+    "authorName": "John Smith",
+    "legalEntityName": "Global Solutions",
+    "createdDate": "2024-05-20T11:30:00Z",
+     "LegalEntityDescription":"Es un contrato"
+}
+
+### Obtener todos los contratos (GET)
+GET {{apiBaseUrl}}
+
+### Obtener un contrato por ID (GET)
+GET {{apiBaseUrl}}/7455c5e3-4c8b-4bc8-89a4-5949e77a4d05
+
+### Actualizar un contrato existente (PUT)
+PUT {{apiBaseUrl}}/b9895817-9c8b-4ffe-8350-3e3b42cfbcf9
+Content-Type: application/json
+
+{
+    "id": "b9895817-9c8b-4ffe-8350-3e3b42cfbcf9",
+    "authorName": "Jane Doe Updated",
+    "legalEntityName": "Example Corp & Co.",
+    "createdDate": "2024-05-20T10:00:00Z",
+     "LegalEntityDescription":"nueva desccprcpcion"
+}
+
+### Eliminar un contrato por ID (DELETE)
+DELETE {{apiBaseUrl}}/7455c5e3-4c8b-4bc8-89a4-5949e77a4d05
