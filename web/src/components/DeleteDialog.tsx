@@ -1,35 +1,31 @@
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-interface DeleteDialogProps {
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
   contractName: string;
+  isLoading?: boolean; // ⚡ nueva prop
 }
 
-export function DeleteDialog({ isOpen, onClose, onConfirm, contractName }: DeleteDialogProps) {
+export const DeleteDialog = ({ isOpen, onClose, onConfirm, contractName, isLoading }: Props) => {
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-card border-border">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-destructive">Delete Contract</AlertDialogTitle>
-          <AlertDialogDescription className="text-muted-foreground">
-            Are you sure you want to delete the contract for "{contractName}"? 
-            This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="border-border hover:bg-muted hover:text-muted-foreground">
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-          >
-            Delete Contract
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Eliminar Contrato</DialogTitle>
+        </DialogHeader>
+        <p className="my-4">¿Estás seguro que quieres eliminar el contrato "{contractName}"?</p>
+        <DialogFooter className="flex gap-2">
+          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+            Cancelar
+          </Button>
+          <Button variant="destructive" onClick={onConfirm} disabled={isLoading}>
+            {isLoading ? "Eliminando..." : "Eliminar"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
-}
+};

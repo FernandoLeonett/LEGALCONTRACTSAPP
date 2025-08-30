@@ -1,146 +1,75 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ContractDto, CreateContractDto, UpdateContractDto } from "@/types/contract";
+import { ContractDto, UpdateContractDto } from "@/types/contract";
 import { useEffect, useState } from "react";
 
-interface ContractFormProps {
+interface Props {
   contract?: ContractDto;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (contract: CreateContractDto | UpdateContractDto) => void;
+  onSave: (data: UpdateContractDto) => void;
+  isLoading?: boolean; // ⚡ nueva prop
 }
 
-export function ContractForm({ contract, isOpen, onClose, onSave }: ContractFormProps) {
-  const [formData, setFormData] = useState<CreateContractDto | UpdateContractDto>(
-    contract
-      ? {
-          id: contract.id,
-          authorName: contract.authorName,
-          legalEntityName: contract.legalEntityName,
-          description: contract.description,
-        }
-      : {
-          authorName: "",
-          legalEntityName: "",
-          description: "",
-        }
-  );
+export const ContractForm = ({ contract, isOpen, onClose, onSave, isLoading }: Props) => {
+  const [legalEntityName, setLegalEntityName] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [description, setDescription] = useState("");
 
-  // Si el prop contract cambia, actualizamos el estado
   useEffect(() => {
     if (contract) {
-      setFormData({
-        id: contract.id,
-        authorName: contract.authorName,
-        legalEntityName: contract.legalEntityName,
-        description: contract.description,
-      });
+      setLegalEntityName(contract.legalEntityName);
+      setAuthorName(contract.authorName);
+      setDescription(contract.description || "");
     } else {
-      setFormData({
-        authorName: "",
-        legalEntityName: "",
-        description: "",
-      });
+      setLegalEntityName("");
+      setAuthorName("");
+      setDescription("");
     }
   }, [contract]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData); // formData ahora es del tipo correcto según el caso
-    onClose();
-    setFormData(
-      contract
-        ? {
-            id: contract.id,
-            authorName: contract.authorName,
-            legalEntityName: contract.legalEntityName,
-            description: contract.description,
-          }
-        : { authorName: "", legalEntityName: "", description: "" }
-    );
-  };
-
-  const handleClose = () => {
-    onClose();
-    setFormData({ authorName: "", legalEntityName: "", description: "" });
+  const handleSubmit = () => {
+    onSave({
+      id: contract?.id || "",
+      legalEntityName,
+      authorName,
+      description, // 👈 obligatorio
+    });
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px] bg-card border-border">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            {contract ? "Edit Contract" : "Create New Contract"}
-          </DialogTitle>
+          <DialogTitle>{contract ? "Editar Contrato" : "Nuevo Contrato"}</DialogTitle>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="authorName" className="text-sm font-medium text-foreground">
-                Author Name *
-              </Label>
-              <Input
-                id="authorName"
-                value={formData.authorName}
-                onChange={(e) => setFormData((prev) => ({ ...prev, authorName: e.target.value }))}
-                placeholder="Enter author name"
-                required
-                className="border-input focus:border-primary focus:ring-primary/20"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="legalEntityName" className="text-sm font-medium text-foreground">
-                Legal Entity Name *
-              </Label>
-              <Input
-                id="legalEntityName"
-                value={formData.legalEntityName}
-                onChange={(e) => setFormData((prev) => ({ ...prev, legalEntityName: e.target.value }))}
-                placeholder="Enter legal entity name"
-                required
-                className="border-input focus:border-primary focus:ring-primary/20"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-medium text-foreground">
-                Description *
-              </Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-                placeholder="Enter contract description"
-                required
-                rows={4}
-                className="border-input focus:border-primary focus:ring-primary/20 resize-none"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="flex-1 border-border hover:bg-muted hover:text-muted-foreground"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1 bg-gradient-primary hover:opacity-90 text-primary-foreground font-medium"
-            >
-              {contract ? "Update Contract" : "Create Contract"}
-            </Button>
-          </div>
-        </form>
+        <div className="flex flex-col gap-4 mt-2">
+          <Input
+            placeholder="Entidad legal"
+            value={legalEntityName}
+            onChange={(e) => setLegalEntityName(e.target.value)}
+            disabled={isLoading}
+          />
+          <Input
+            placeholder="Autor"
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            disabled={isLoading}
+          />
+          <Input
+            placeholder="Descripción"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            disabled={isLoading}
+          />
+        </div>
+        <DialogFooter>
+          <Button onClick={handleSubmit} disabled={isLoading}>
+            {isLoading ? "Guardando..." : "Guardar"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-}
+};
