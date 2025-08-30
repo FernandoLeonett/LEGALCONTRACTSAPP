@@ -32,7 +32,6 @@ namespace Core.Services
         {
             _logger.LogInformation("📄 Creating a new contract.");
             contract.CreatedDate = DateTime.UtcNow;
-            contract.UpdatedDate = DateTime.UtcNow;
             await _contractRepository.AddAsync(contract);
             return true;
         }

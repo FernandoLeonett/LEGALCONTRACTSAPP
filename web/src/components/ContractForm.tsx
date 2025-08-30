@@ -1,30 +1,66 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ContractDto } from "@/types/contract";
+import { ContractDto, CreateContractDto, UpdateContractDto } from "@/types/contract";
+import { useEffect, useState } from "react";
 
 interface ContractFormProps {
   contract?: ContractDto;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (contract: Omit<ContractDto, 'id' | 'createdDate' | 'updatedDate'>) => void;
+  onSave: (contract: CreateContractDto | UpdateContractDto) => void;
 }
 
 export function ContractForm({ contract, isOpen, onClose, onSave }: ContractFormProps) {
-  const [formData, setFormData] = useState({
-    authorName: contract?.authorName || "",
-    legalEntityName: contract?.legalEntityName || "",
-    description: contract?.description || "",
-  });
+  const [formData, setFormData] = useState<CreateContractDto | UpdateContractDto>(
+    contract
+      ? {
+          id: contract.id,
+          authorName: contract.authorName,
+          legalEntityName: contract.legalEntityName,
+          description: contract.description,
+        }
+      : {
+          authorName: "",
+          legalEntityName: "",
+          description: "",
+        }
+  );
+
+  // Si el prop contract cambia, actualizamos el estado
+  useEffect(() => {
+    if (contract) {
+      setFormData({
+        id: contract.id,
+        authorName: contract.authorName,
+        legalEntityName: contract.legalEntityName,
+        description: contract.description,
+      });
+    } else {
+      setFormData({
+        authorName: "",
+        legalEntityName: "",
+        description: "",
+      });
+    }
+  }, [contract]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave(formData); // formData ahora es del tipo correcto según el caso
     onClose();
-    setFormData({ authorName: "", legalEntityName: "", description: "" });
+    setFormData(
+      contract
+        ? {
+            id: contract.id,
+            authorName: contract.authorName,
+            legalEntityName: contract.legalEntityName,
+            description: contract.description,
+          }
+        : { authorName: "", legalEntityName: "", description: "" }
+    );
   };
 
   const handleClose = () => {
@@ -40,7 +76,7 @@ export function ContractForm({ contract, isOpen, onClose, onSave }: ContractForm
             {contract ? "Edit Contract" : "Create New Contract"}
           </DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
@@ -50,13 +86,13 @@ export function ContractForm({ contract, isOpen, onClose, onSave }: ContractForm
               <Input
                 id="authorName"
                 value={formData.authorName}
-                onChange={(e) => setFormData(prev => ({ ...prev, authorName: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, authorName: e.target.value }))}
                 placeholder="Enter author name"
                 required
                 className="border-input focus:border-primary focus:ring-primary/20"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="legalEntityName" className="text-sm font-medium text-foreground">
                 Legal Entity Name *
@@ -64,13 +100,13 @@ export function ContractForm({ contract, isOpen, onClose, onSave }: ContractForm
               <Input
                 id="legalEntityName"
                 value={formData.legalEntityName}
-                onChange={(e) => setFormData(prev => ({ ...prev, legalEntityName: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, legalEntityName: e.target.value }))}
                 placeholder="Enter legal entity name"
                 required
                 className="border-input focus:border-primary focus:ring-primary/20"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="description" className="text-sm font-medium text-foreground">
                 Description *
@@ -78,7 +114,7 @@ export function ContractForm({ contract, isOpen, onClose, onSave }: ContractForm
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                 placeholder="Enter contract description"
                 required
                 rows={4}
@@ -86,7 +122,7 @@ export function ContractForm({ contract, isOpen, onClose, onSave }: ContractForm
               />
             </div>
           </div>
-          
+
           <div className="flex gap-3 pt-4">
             <Button
               type="button"

@@ -1,8 +1,10 @@
-import { addContractApi, deleteContractApi, getContracts, updateContractApi } from "@/api/contract";
-import { ContractDto, CreateContractDto, UpdateContractDto } from "@/types/contract";
-import { useEffect, useMemo, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { addContractApi, deleteContractApi, getContracts, updateContractApi } from "../api/contract";
+import { ContractDto, CreateContractDto, UpdateContractDto } from "../types/contract";
 
 export function useContracts() {
+  const { toast } = useToast();
   const [contracts, setContracts] = useState<ContractDto[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "date" | "author">("date");
@@ -11,50 +13,29 @@ export function useContracts() {
     const fetchContracts = async () => {
       try {
         const data = await getContracts();
-        console.log("Contratos obtenidos:", data);
         setContracts(data);
       } catch (err) {
-        console.error("Error al obtener contratos:", err);
+        console.error(err);
+        toast({ title: "Error", description: "No se pudieron obtener los contratos." });
       }
     };
 
     fetchContracts();
-  }, []);
-  const filteredAndSortedContracts = useMemo(() => {
-    const filtered = contracts.filter(
-      (contract) =>
-        contract.legalEntityName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contract.authorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contract.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "name":
-          return a.legalEntityName.localeCompare(b.legalEntityName);
-        case "author":
-          return a.authorName.localeCompare(b.authorName);
-        case "date":
-        default:
-          return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime();
-      }
-    });
-
-    return filtered;
-  }, [contracts, searchTerm, sortBy]);
+  }, [toast]);
 
   const addContract = async (contractData: CreateContractDto) => {
     try {
-      console.log("Agregando contrato:", contractData);
       const newContract = await addContractApi(contractData);
       setContracts((prev) => [newContract, ...prev]);
+      toast({ title: "Contrato agregado", description: "El contrato se agregó correctamente." });
     } catch (error) {
       console.error(error);
+      toast({ title: "Error al agregar contrato", description: `${error}` });
     }
   };
+
   const updateContract = async (contractData: UpdateContractDto) => {
     try {
-      console.log("Actualizando contrato con ID:", contractData.id, "Datos:", contractData);
       await updateContractApi(contractData);
       setContracts((prev) =>
         prev.map((contract) =>
@@ -63,8 +44,10 @@ export function useContracts() {
             : contract
         )
       );
+      toast({ title: "Contrato actualizado", description: "Los cambios se guardaron correctamente." });
     } catch (error) {
-      console.error("Error al actualizar contrato:", error);
+      console.error(error);
+      toast({ title: "Error al actualizar contrato", description: `${error}` });
     }
   };
 
@@ -72,13 +55,15 @@ export function useContracts() {
     try {
       await deleteContractApi(id);
       setContracts((prev) => prev.filter((contract) => contract.id !== id));
+      toast({ title: "Contrato eliminado", description: "El contrato se eliminó correctamente." });
     } catch (error) {
       console.error(error);
+      toast({ title: "Error al eliminar contrato", description: `${error}` });
     }
   };
 
   return {
-    contracts: filteredAndSortedContracts,
+    contracts: contracts, // o filteredAndSortedContracts si quieres filtrar/ordenar
     searchTerm,
     setSearchTerm,
     sortBy,
