@@ -367,4 +367,6 @@ FodyWeavers.xsd
 *.sqlite3
 
 # Carpeta de backups (ignora todo dentro de ella)
-/bck/API/db/
+/bck/API/db/** 
+/bck/Data/Migrations/
+

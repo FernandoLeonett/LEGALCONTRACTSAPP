@@ -34,13 +34,13 @@ WebApplication app = builder.Build();
 app.UseCors("DevCors");
 
 // Habilitar la visualización de la documentación solo en desarrollo.
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
     app.MapOpenApi();
     app.MapScalarApiReference(options => options
         .WithTitle("Contracts API")
         .WithTheme(ScalarTheme.BluePlanet));
-//}
+}
 
 app.MapControllers();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
