@@ -361,12 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-# Archivos de base de datos SQLite
-*.db
-*.sqlite
-*.sqlite3
 
-# Carpeta de backups (ignora todo dentro de ella)
-/bck/API/db/** 
-/bck/Data/Migrations/
 
+# Carpeta de base de datos local
+/API/db/

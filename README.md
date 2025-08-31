@@ -1,103 +1,86 @@
-# 📜 LegalContractsApp
+# LegalContractsApp
 
-Una aplicación **CRUD fullstack** que demuestra el desarrollo de un **RESTful API en .NET** y un **frontend responsivo en React + TypeScript**.
-El proyecto se centra en la **modularidad**, las **mejores prácticas** y la **experiencia de desarrollador**.
+Una aplicación **full-stack** para la gestión de contratos, con **API RESTful en .NET 9.0** y frontend **React + TypeScript**.  
+El proyecto se centra en **modularidad y buenas prácticas**, usando:
 
-![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet&logoColor=white)  
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)  
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)  
-![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite&logoColor=white)
-
----
-
-## 🚀 Visión General
-
-### 💻 Backend (C# | .NET 9.0)
-
-- **SQLite + EF Core** → Base de datos ligera, ideal para pruebas y despliegues sin dependencias externas.
-- **OpenAPI + Scalar** → Documentación interactiva y autoexplorable de la API.
-- **Serilog** → Logging estructurado para trazabilidad y debugging.
-- **Arquitectura modular** → separación clara por capas.
-
-### ⚛️ Frontend (React + TypeScript)
-
-- Construido con **Vite** para desarrollo rápido.
-- UI moderna con:
-  - Modales para formularios ✍️
-  - Toast notifications 🔔
-  - Loader de estados de carga ⏳
-  - Filtrado y ordenamiento (autor, fecha, entidad) 🔎
-  - Página 404 personalizada 🚫
-
-### 🧪 Testing
-
-- **xUnit, Moq, FluentAssertions** → Pruebas unitarias en el backend.
-
-### 🤖 Asistencia de IA
-
-IA utilizada como soporte para depuración, optimización y comandos de EF.
+- **Arquitectura por capas:** presentación → lógica de negocio → acceso a datos.
+- **Patrón Repository:** abstrae la persistencia de datos.
+- **Principios SOLID** y **Single Responsibility:** cada clase tiene una sola responsabilidad, mejorando claridad y testabilidad.
 
 ---
 
-## ⚙️ Requisitos Previos
+## 💻 Backend (C# | .NET 9.0)
 
-- [Visual Studio 2022+](https://visualstudio.microsoft.com/)
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download)
-- [Node.js 20+](https://nodejs.org/)
+- **Base de datos:** SQLite + EF Core.
+- **Documentación:** OpenAPI + Scalar.
+- **Arquitectura:** Modular, con patrón Repository.
+- **Pruebas:** xUnit, Moq y FluentAssertions.
+- **Endpoints CRUD:** `GET`, `POST`, `PUT`, `DELETE` para contratos.
 
 ---
 
-## 📁 Clonar el Repositorio
+## ⚛️ Frontend (React + TypeScript)
 
-git clone https://github.com/FernandoLeonett/LEGALCONTRACTSAPP
-cd LEGALCONTRACTSAPP
+- **Entorno de desarrollo:** Vite.
+- **UI moderna y responsiva:** modales, notificaciones y loaders.
+- **Funcionalidades:** CRUD completo, filtrado y ordenamiento.
+- **Pruebas:** una prueba unitaria con Jest + React Testing Library.
 
-## ▶️ Ejecutar el Backend
+---
+
+## ⚙️ Requisitos
+
+- Visual Studio 2022+
+- .NET 9.0 SDK
+- Node.js 20+
+- Docker (opcional, recomendado)
+
+---
+
+## 🐳 Ejecución con Docker
+
+Levanta **backend, frontend y base de datos** con un solo comando:
+
+```bash
+docker-compose up --build
+Backend: http://localhost:5167
+
+Frontend: http://localhost:4200
+
+Para detener los contenedores:
+
+
+docker-compose down
+```
+
+## 🤷‍♂️ Ejecución Manual, sin Docker
+
+```bash
+
+Backend – Ejecutar la API
+Primero entra en la carpeta del backend, restaura las dependencias y levanta el servidor:
+
+cd bck # Entrar en la carpeta del backend
+dotnet restore # Restaurar dependencias de .NET
+dotnet run # Iniciar la API en modo desarrollo
+El backend estará disponible en: http://localhost:5167
+
+Frontend – Ejecutar la interfaz
+Luego entra en la carpeta del frontend, instala dependencias y levanta el servidor de desarrollo:
+
+cd web # Entrar en la carpeta del frontend
+npm install # Instalar dependencias de Node
+npm run dev -- --open # Iniciar la app y abrirla en el navegador
+El frontend estará disponible en: http://localhost:4200
+
+🧪 Ejecutar Pruebas
+Backend
+Para correr las pruebas unitarias del backend:
 
 cd bck
-dotnet restore
+dotnet test # Ejecuta todas las pruebas definidas
 
-### Configurar DB
-
-cd API
-mkdir db
-
-(ruta de la BD definida en appsettings.json)
-
-### Migrar DB
-
-Desde Package Manager Console con Data como proyecto por defecto
-add-migration Initial
-update-database
-
-### Ejecutar API
-
-dotnet run
-
-Servidor: http://localhost:5166
-Documentación: Scalar UI se abre automáticamente en el navegador.
-
----
-
-## 🌐 Ejecutar el Frontend
-
-cd web
-npm install
-
-### Crear archivo .env
-
-```env
-VITE_API_URL=http://localhost:5166/api
-Asignar esta variable de entorno para que el cliente React sepa la ubicación de la API.
-
-Levantar cliente:
-npm run dev -- --open
-Disponible en http://localhost:8080.
-
-✅ Ejecutar Tests
-cd bck
-dotnet test
 🧑‍💻 Autor
-👤 Fernando Leonett
-🔗 GitHub
+Fernando Leonett
+
 ```
