@@ -36,14 +36,15 @@ app.UseCors("DevCors");
 // Habilitar la visualización de la documentación solo en desarrollo.
 if (app.Environment.IsDevelopment())
 {
+    app.EnsureDatabaseCreated();
+
     app.MapOpenApi();
     app.MapScalarApiReference(options => options
         .WithTitle("Contracts API")
         .WithTheme(ScalarTheme.BluePlanet));
 }
-
+app.ApplyDatabaseMigrations();
 app.MapControllers();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseDatabaseMigration();
 
 app.Run();
