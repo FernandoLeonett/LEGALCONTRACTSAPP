@@ -37,7 +37,7 @@ const Index = () => {
     } else {
       await addContract(contractData);
     }
-    setIsFormOpen(false); // 👈 cierra modal solo si la API responde
+    setIsFormOpen(false);
   };
 
   const handleEdit = (contract: ContractDto) => {
