@@ -1,6 +1,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useMemo, useState } from "react";
-import { addContractApi, deleteContractApi, getContracts, updateContractApi } from "../api/contract";
+import { addContractApi, deleteContractApi, getContracts, updateContractApi } from "../api/contracts";
 import { ContractDto, CreateContractDto, UpdateContractDto } from "../types/contract";
 
 // Hook para debounce

@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Ignorar base de datos SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Carpeta de backups
+/bck/API/db/**
+
+/bck/API/db/contracts.db

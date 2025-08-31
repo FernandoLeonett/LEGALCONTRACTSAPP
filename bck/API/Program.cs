@@ -7,8 +7,10 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Configurar servicios
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 builder.Services.AddApplicationServices(builder.Configuration);
+
+// Configuración de la documentación de la API usando el método de extensión
+builder.Services.AddOpenApiDocumentation();
 
 // CORS debe ir **antes** de builder.Build()
 builder.Services.AddCors(options =>
@@ -30,11 +32,16 @@ WebApplication app = builder.Build();
 
 // Middleware
 app.UseCors("DevCors");
-app.MapOpenApi();
+
+// Habilitar la visualización de la documentación solo en desarrollo.
 if (app.Environment.IsDevelopment())
 {
-    app.MapScalarApiReference();
+    app.MapOpenApi();
+    app.MapScalarApiReference(options => options
+        .WithTitle("Contracts API")
+        .WithTheme(ScalarTheme.BluePlanet));
 }
+
 app.MapControllers();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseDatabaseMigration();
