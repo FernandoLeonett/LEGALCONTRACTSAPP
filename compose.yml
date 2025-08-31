@@ -1,0 +1,25 @@
+services:
+  bck:
+    build: bck
+
+    volumes:
+      - db_data:/app/db # persistencia de SQLite en /app/db
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+
+    ports:
+      - "5167:5166"
+    restart: on-failure
+
+  web:
+    build: web
+
+    depends_on:
+      - bck
+
+    ports:
+      - "4200:8080"
+    restart: on-failure
+
+volumes:
+  db_data:
