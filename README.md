@@ -37,6 +37,23 @@ El proyecto se centra en **modularidad y buenas prácticas**, usando:
 
 ---
 
+🌱 Configuración de variables de entorno
+
+Antes de ejecutar la aplicación, crea los archivos .env en las carpetas bck y web:
+
+Backend (bck/.env)
+DOTNET_ENVIRONMENT=Development
+BACKEND_PORT_HOST=5167
+BACKEND_PORT_CONTAINER=5166
+
+Frontend (web/.env)
+VITE_API_URL=http://localhost:5167/api
+VITE_PORT=4200
+
+Estos valores son los predeterminados; puedes modificarlos según tus necesidades de puerto o entorno.
+
+---
+
 ## 🐳 Ejecución con Docker
 
 Levanta **backend, frontend y base de datos** con un solo comando:
