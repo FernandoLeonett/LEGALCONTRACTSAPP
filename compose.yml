@@ -1,24 +1,31 @@
-services:
-  bck:
-    build: bck
+version: "3.9"
 
-    volumes:
-      - db_data:/app/db # persistencia de SQLite en /app/db
+services:
+  backend:
+    build:
+      context: ./bck
+      args:
+        BACKEND_PORT_CONTAINER: ${BACKEND_PORT_CONTAINER}
+    container_name: backend
     environment:
       - DOTNET_ENVIRONMENT=Development
-
     ports:
-      - "5167:5166"
+      - "${BACKEND_PORT_HOST}:${BACKEND_PORT_CONTAINER}"
+    volumes:
+      - db_data:/app/db
     restart: on-failure
 
-  web:
-    build: web
-
+  frontend:
+    build:
+      context: ./web
+      args:
+        VITE_API_URL: "http://localhost:${BACKEND_PORT_HOST}/api" # apunta al puerto host porque navegador hace el fetch
+        VITE_PORT: ${FRONTEND_PORT_CONTAINER}
+    container_name: frontend
     depends_on:
-      - bck
-
+      - backend
     ports:
-      - "4200:8080"
+      - "${FRONTEND_PORT_HOST}:${FRONTEND_PORT_CONTAINER}"
     restart: on-failure
 
 volumes:
