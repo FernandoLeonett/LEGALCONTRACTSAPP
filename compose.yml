@@ -1,12 +1,9 @@
-version: "3.9"
-
 services:
   backend:
     build:
       context: ./bck
       args:
         BACKEND_PORT_CONTAINER: ${BACKEND_PORT_CONTAINER}
-    container_name: backend
     environment:
       - DOTNET_ENVIRONMENT=Development
     ports:
@@ -19,9 +16,8 @@ services:
     build:
       context: ./web
       args:
-        VITE_API_URL: "http://localhost:${BACKEND_PORT_HOST}/api" # apunta al puerto host porque navegador hace el fetch
+        VITE_API_URL: "http://localhost:${BACKEND_PORT_HOST}/api" # apunta al host porque navegador hace fetch
         VITE_PORT: ${FRONTEND_PORT_CONTAINER}
-    container_name: frontend
     depends_on:
       - backend
     ports:
