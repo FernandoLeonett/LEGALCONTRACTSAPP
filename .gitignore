@@ -365,3 +365,4 @@ FodyWeavers.xsd
 
 # Carpeta de base de datos local
 /API/db/
+/bck/API/db
